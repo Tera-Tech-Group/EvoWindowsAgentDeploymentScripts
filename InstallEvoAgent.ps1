@@ -215,6 +215,24 @@ param(
     [switch] $Help
 )
 
+if (-not $DeploymentToken) {
+    try {
+        Write-Host "Retrieving Deployment Token using Ninja-Property-Get..."
+        $DeploymentToken = (Ninja-Property-Get evoDeploymentToken | Out-String).Trim()
+ 
+        if (-not $DeploymentToken) {
+            throw "Ninja-Property-Get returned no value for evoDeploymentToken."
+        }
+
+        Write-Host "Retrieved Deployment Token successfully."
+    }
+    catch {
+        Write-Error "Failed to retrieve Deployment Token using Ninja-Property-Get: $_"
+        exit 1
+    }
+}
+
+
 function Show-Help {
     @"
 Evo Windows Agent Installer
